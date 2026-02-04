@@ -11,7 +11,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <!-- 3. 引入 Babel 用於解析 JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- 移除外部 Lucide Script，改用內建組件以確保穩定性 -->
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; }
@@ -25,85 +25,22 @@
     <script type="text/babel">
         const { useState, useMemo } = React;
 
-        // --- 內建圖標組件 (解決 CDN 載入錯誤問題) ---
+        // --- 內建圖標組件 (確保穩定性) ---
         const IconWrapper = ({ children, size = 24, className = "", ...props }) => (
-            <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width={size} 
-                height={size} 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                className={className} 
-                {...props}
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
                 {children}
             </svg>
         );
+        const Trophy = (props) => <IconWrapper {...props}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></IconWrapper>;
+        const Search = (props) => <IconWrapper {...props}><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></IconWrapper>;
+        const ArrowLeft = (props) => <IconWrapper {...props}><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></IconWrapper>;
+        const Star = (props) => <IconWrapper {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></IconWrapper>;
+        const ChevronRight = (props) => <IconWrapper {...props}><path d="m9 18 6-6-6-6" /></IconWrapper>;
+        const User = (props) => <IconWrapper {...props}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></IconWrapper>;
+        const Zap = (props) => <IconWrapper {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></IconWrapper>;
+        // --- 結束內建圖標 ---
 
-        const Trophy = (props) => (
-            <IconWrapper {...props}>
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                <path d="M4 22h16" />
-                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-            </IconWrapper>
-        );
-
-        const Search = (props) => (
-            <IconWrapper {...props}>
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-            </IconWrapper>
-        );
-
-        const ArrowLeft = (props) => (
-            <IconWrapper {...props}>
-                <path d="m12 19-7-7 7-7" />
-                <path d="M19 12H5" />
-            </IconWrapper>
-        );
-
-        const Star = (props) => (
-            <IconWrapper {...props}>
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </IconWrapper>
-        );
-
-        const ChevronRight = (props) => (
-            <IconWrapper {...props}>
-                <path d="m9 18 6-6-6-6" />
-            </IconWrapper>
-        );
-
-        const User = (props) => (
-            <IconWrapper {...props}>
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-            </IconWrapper>
-        );
-
-        const Zap = (props) => (
-            <IconWrapper {...props}>
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-            </IconWrapper>
-        );
-
-        const ShieldCheck = (props) => (
-            <IconWrapper {...props}>
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                <path d="m9 12 2 2 4-4" />
-            </IconWrapper>
-        );
-
-        // --- 結束內建圖標組件 ---
-
-        // 特訓卡圖片對應表
+        // 來自 Sheet 3 的最新特訓卡圖片連結
         const TRAINING_CARD_IMAGES = {
             "SSR夏蘭特": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/training%20ssr/halaand.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0cmFpbmluZyBzc3IvaGFsYWFuZC5wbmciLCJpYXQiOjE3NzAwOTE0NDgsImV4cCI6MTgwMTYyNzQ0OH0.LsEHJbcnnHqt9JE-AsvB44aQzlv4f_LcTjBqLSiWjJk",
             "SSR盧卡古": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/training%20ssr/lukaku.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0cmFpbmluZyBzc3IvbHVrYWt1LnBuZyIsImlhdCI6MTc3MDA5MTQ5MSwiZXhwIjoxODAxNjI3NDkxfQ.YmNimJ2nRlvM3tPXDqLlHEKy5wgF-dvh32fKOSH_NVY",
@@ -124,7 +61,7 @@
             "SSR迪格欄賴斯": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/training%20ssr/Ricetraining.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0cmFpbmluZyBzc3IvUmljZXRyYWluaW5nLnBuZyIsImlhdCI6MTc3MDA5MTUzNSwiZXhwIjoxODAxNjI3NTM1fQ.Yo6fLE_aftW-iwMRs2SrybNpGHEDe528kUZg9p_NFvc",
             "SR雲比沙卡": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/Training%20Sr/vanbeesaka.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUcmFpbmluZyBTci92YW5iZWVzYWthLnBuZyIsImlhdCI6MTc3MDA5MzE0MSwiZXhwIjoxODAxNjI5MTQxfQ.p_1nBOMjz9WTOBgqDgFdA2FRyjozbcoDG-XQv9BKpCI",
             "SSR馬天尼斯": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/training%20ssr/martines.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0cmFpbmluZyBzc3IvbWFydGluZXMucG5nIiwiaWF0IjoxNzcwMDkxNDk5LCJleHAiOjE4MDE2Mjc0OTl9.qxQqnF6PGYyNCHn7Yf-b_DUCrf8zgNO_Gw9ccDp5Vps",
-            "SR馬高卡尼斯治": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/Training%20Sr/marco.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUcmFpbmluZyBTci9tYXJjby5wbmciLCJpYXQiOjE3NzAwOTMxMTEsImV4cCI6MTgwMTYyOTExMX0.F0sBbJbdPHmnLbrSSq8FLAK3Hk1mNdJJI5FwMwXBglQ",
+            "SR馬高卡尼斯治": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/Training%20Sr/marco.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUcmFpbmluZyBTci9tYXJjby5wbmciLCJpYXQiOjE3NzAwOTMxMTAsImV4cCI6MTgwMTYyOTExMH0.F0sBbJbdPHmnLbrSSq8FLAK3Hk1mNdJJI5FwMwXBglQ",
             "SR恩尼森馬": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/Training%20Sr/srsoma.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUcmFpbmluZyBTci9zcnNvbWEucG5nIiwiaWF0IjoxNzcwMDkzMTI4LCJleHAiOjE4MDE2MjkxMjh9.XIyzhAexeewuAwtlLVHNA1CCN_GyDGUE7pn90r0WoEY",
             "SSR丹尼爾卡華積": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/training%20ssr/carvajake.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0cmFpbmluZyBzc3IvY2FydmFqYWtlLnBuZyIsImlhdCI6MTc3MDA5MTQ0MywiZXhwIjoxODAxNjI3NDQzfQ.0WdgQtKZREXXrjEnevgLgzB-iTvV5A1TYEgl2lnTjY4",
             "SSR米奇雲迪分": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/training%20ssr/vandeven.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0cmFpbmluZyBzc3IvdmFuZGV2ZW4ucG5nIiwiaWF0IjoxNzcwMDkxNTc1LCJleHAiOjE4MDE2Mjc1NzV9.T_wwZGfQB47VpADZm2iHc6rz7od8oy8-5WwUDFTyNBk",
@@ -132,25 +69,28 @@
             "SSR進攻基礎訓練": "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/Training%20Sr/attack.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUcmFpbmluZyBTci9hdHRhY2sucG5nIiwiaWF0IjoxNzcwMDk0OTI2LCJleHAiOjE4MDE2MzA5MjZ9.rjXY16i3D--jL00ETFeTgFEW3I1ooiWDKR0bcTSslOY"
         };
 
-        const INITIAL_PLAYER_DATA = [
-            { id: 1, name: "基斯坦奴朗拿度", style: "CF 前鋒", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/c7.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9jNy5wbmciLCJpYXQiOjE3NzAwODgyOTksImV4cCI6MTgwMTYyNDI5OX0.HUjZV1WEOyeqmK7ppwAXl7QT_Qi7oWbKh6PjE5D_cvY", t1: "SSR夏蘭特", t2: "SSR盧卡古", t3: "SSR紐尼斯", t4: "SSR本田圭右", t5: "SSR進攻基礎訓練", t6: "SR上田綺世", bonus: "SSR夏蘭特" },
-            { id: 2, name: "孫興慜", style: "CF 防線突破者", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Heang-Min%20Son.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9IZWFuZy1NaW4gU29uLnBuZyIsImlhdCI6MTc3MDA4ODMxNiwiZXhwIjoxODAxNjI3NDMxNiwiZXhwIjoxODAxNjI0MzE2fQ.pcI9xeLGEkiqwENN_6tv3dTj_h8jUoYJk2M2VKqgYYU", t1: "SSR夏蘭特", t2: "SSR紐尼斯", t3: "SSR本田圭右", t4: "SSR進攻基礎訓練", t5: "SR上田綺世", t6: "N/A", bonus: "SSR紐尼斯" },
-            { id: 3, name: "本田圭右", style: "RM 邊鋒", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Keisuke%20Honda.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9LZWlzdWtlIEhvbmRhLnBuZyIsImlhdCI6MTc3MDA4ODMyMiwiZXhwIjoxODAxNjI0MzIyfQ.ebJy3wt7oT4l9htF2YBdKdC8bqKHN8YJA-hHt7KXAYk", t1: "SSR伊東純也", t2: "SSR迪奧靴南迪斯", t3: "SSR孫興慜", t4: "SR拉奧比特", t5: "SR比蘭莊臣", t6: "SSR堅南耶迪斯", bonus: "SSR孫興慜" },
-            { id: 4, name: "祖奧柏度", style: "AM 攻擊手", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Joao%20Pedro.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9Kb2FvIFBlZHJvLnBuZyIsImlhdCI6MTc3MDA4ODM2NiwiZXhwIjoxODAxNjI0MzY2fQ.xluLHRNkfEymQD7TxrcukpUyMjct0s8mucx4wVswZ9o", t1: "SSR堅南耶迪斯", t2: "SSR本田圭右", t3: "SSR進攻基礎訓練", t4: "SSR魔迪", t5: "SR拉奧比特", t6: "SR丹尼爾柏利祖", bonus: "SSR本田圭右" },
-            { id: 5, name: "艾沙拉維", style: "LM 邊鋒", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Stephan%20El%20Shaaray.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9TdGVwaGFuIEVsIFNoYWFyYXkucG5nIiwiaWF0IjoxNzcwMDg4MzQyLCJleHAiOjE4MDE2MjQzNDJ9.OvrJiwrIyWHeHUR_rlYPB3drhzPn-9UhrFinUcqbDlM", t1: "SSR伊東純也", t2: "SSR迪奧靴南迪斯", t3: "SSR孫興慜", t4: "SR拉奧比特", t5: "SR比蘭莊臣", t6: "SR洛迪高德保羅", bonus: "SSR孫興慜" },
-            { id: 6, name: "華維迪", style: "DM 正中場", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/vaverde.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC92YXZlcmRlLnBuZyIsImlhdCI6MTc3MDA4ODM0OSwiZXhwIjoxODAxNjI0MzQ5fQ.yv1UhOYwleFZmH3xRu05L4cE4IcZkCdHDEo3AJgLNB4", t1: "SR遠藤航", t2: "SSR湯母利", t3: "SSR迪奧靴南迪斯", t4: "SSR迪格欄賴斯", t5: "SSR魔迪", t6: "SR雲比sha卡", bonus: "SSR魔迪" },
-            { id: 7, name: "森馬", style: "GK 傳統GK", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/n%20Sommer.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9uIFNvbW1lci5wbmciLCJpYXQiOjE3NzAwODgzMjgsImV4cCI6MTgwMTYyNDMyOH0.eWirjWSKznXumms9KgIDwBQhNJ-uTyQEtBdxmPmrnuc", t1: "SSR馬天尼斯", t2: "SR馬高卡尼斯治", t3: "SR恩尼森馬", t4: "SSR馬天尼斯", t5: "SSR馬天尼斯", t6: "SSR馬天尼斯", bonus: "SSR馬天尼斯" },
-            { id: 8, name: "阿歷辛迪路", style: "CB 搶截者", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Alexsandro%20Ribel.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9BbGV4c2FuZHJvIFJpYmVsLnBuZyIsImlhdCI6MTc3MDA4ODI4NywiZXhwIjoxODAxNjI0Mjg3fQ.hmv-kpyNwEatmuigGsU6sBzPnJIId6kEpfnhTlezlSQ", t1: "SSR湯母利", t2: "SSR丹尼爾卡華積", t3: "SSR米奇雲迪分", t4: "SSR魔迪", t5: "SSR迪奧靴南迪斯", t6: "SSR迪格欄賴斯", bonus: "SSR湯母利" },
-            { id: 9, name: "加迪", style: "CB 搶截者", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Federico%20Gatti.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9GZWRlcmljbyBHYXR0aS5wbmciLCJpYXQiOjE3NzAwODgzMDksImV4cCI6MTgwMTYyNDMwOX0.i8152YG6If5BuHGSvpLjf95aQ8l54tqb4AsOBYd3zQI", t1: "SSR湯母利", t2: "SSR丹尼爾卡華積", t3: "SSR米奇雲迪分", t4: "SSR魔迪", t5: "SSR迪奧靴南迪斯", t6: "SR遠藤航", bonus: "SSR湯母利" },
-            { id: 10, name: "拿侯爾摩連拿", style: "RB 攻擊型", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Nahuel%20Molina.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9OYWh1ZWwgTW9saW5hLnBuZyIsImlhdCI6MTc3MDA4ODMzNSwiZXhwIjoxODAxNjI0MzM1fQ.Et-UVQKlEdsmVYB7kOMsV6DIih_tcB-MOgUcLpgDIGo", t1: "SSR迪奧靴南迪斯", t2: "SSR巴斯東尼", t3: "SSR丹尼爾卡華積", t4: "SSR湯母利", t5: "SR雲比sha卡", t6: "SR遠藤航", bonus: "SSR迪奧靴南迪斯" },
-            { id: 11, name: "長友佑都", style: "LB 攻擊型", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Yuto%20Nagatomo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9ZdXRvIE5hZ2F0b21vLnBuZyIsImlhdCI6MTc3MDA4ODM1OSwiZXhwIjoxODAxNjI0MzU5fQ.0NXOiGqRYWBqrDEJbbWIf6-nFCS752mEZYxRWd4S35c", t1: "SSR迪奧靴南迪斯", t2: "SSR巴斯東尼", t3: "SSR丹尼爾卡華積", t4: "SSR湯母利", t5: "SR雲比sha卡", t6: "SR遠藤航", bonus: "SSR迪奧靴南迪斯" }
-        ];
-
+        // 輔助函式：標準化名稱並獲取圖片 (處理空格問題)
         const getTrainingCardImage = (name) => {
             if (!name || name === "N/A") return null;
+            // 嘗試匹配原始名稱，或去除所有空格後的名稱
             const cleanName = name.replace(/\s+/g, '');
-            return TRAINING_CARD_IMAGES[cleanName] || TRAINING_CARD_IMAGES[name];
+            return TRAINING_CARD_IMAGES[name] || TRAINING_CARD_IMAGES[cleanName];
         };
+
+        // 最新球員數據 (來自 Sheet 1 & Sheet 2)
+        const INITIAL_PLAYER_DATA = [
+            { id: 1, name: "基斯坦奴朗拿度", style: "CF 前鋒", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/c7.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9jNy5wbmciLCJpYXQiOjE3NzAwODgyOTksImV4cCI6MTgwMTYyNDI5OX0.HUjZV1WEOyeqmK7ppwAXl7QT_Qi7oWbKh6PjE5D_cvY", t1: "SSR夏蘭特", t2: "SSR盧卡古", t3: "SSR紐尼斯", t4: "SSR本田圭右", t5: "SR上田綺世", t6: "N/A", bonus: "SSR夏蘭特" },
+            { id: 2, name: "孫興慜", style: "CF 防線突破者", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Heang-Min%20Son.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9IZWFuZy1NaW4gU29uLnBuZyIsImlhdCI6MTc3MDA4ODMxNiwiZXhwIjoxODAxNjI0MzE2fQ.pcI9xeLGEkiqwENN_6tv3dTj_h8jUoYJk2M2VKqgYYU", t1: "SSR夏蘭特", t2: "SSR紐尼斯", t3: "SSR本田圭右", t4: "SSR進攻基礎訓練", t5: "SR上田綺世", t6: "N/A", bonus: "SSR夏蘭特" },
+            { id: 3, name: "本田圭右", style: "RM 邊鋒", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Keisuke%20Honda.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9LZWlzdWtlIEhvbmRhLnBuZyIsImlhdCI6MTc3MDA4ODMyMiwiZXhwIjoxODAxNjI0MzIyfQ.ebJy3wt7oT4l9htF2YBdKdC8bqKHN8YJA-hHt7KXAYk", t1: "SSR 伊東純也", t2: "SSR迪奧靴南迪斯", t3: "SSR孫興慜", t4: "SR 比蘭莊臣", t5: "SSR堅南耶迪斯", t6: "N/A", bonus: "SSR孫興慜" },
+            { id: 4, name: "祖奧柏度", style: "AM 攻擊手", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Joao%20Pedro.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9Kb2FvIFBlZHJvLnBuZyIsImlhdCI6MTc3MDA4ODM2NiwiZXhwIjoxODAxNjI0MzY2fQ.xluLHRNkfEymQD7TxrcukpUyMjct0s8mucx4wVswZ9o", t1: "SSR堅南耶迪斯", t2: "SSR本田圭右", t3: "SSR進攻基礎訓練", t4: "SSR 魔迪", t5: "N/A", t6: "N/A", bonus: "SSR本田圭右" },
+            { id: 5, name: "艾沙拉維", style: "LM 邊鋒", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Stephan%20El%20Shaaray.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9TdGVwaGFuIEVsIFNoYWFyYXkucG5nIiwiaWF0IjoxNzcwMDg4MzQyLCJleHAiOjE4MDE2MjQzNDJ9.OvrJiwrIyWHeHUR_rlYPB3drhzPn-9UhrFinUcqbDlM", t1: "SSR 伊東純也", t2: "SSR迪奧靴南迪斯", t3: "SSR孫興慜", t4: "SR 比蘭莊臣", t5: "N/A", t6: "N/A", bonus: "SSR孫興慜" },
+            { id: 6, name: "華維迪", style: "DM 正中場", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/vaverde.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC92YXZlcmRlLnBuZyIsImlhdCI6MTc3MDA4ODM0OSwiZXhwIjoxODAxNjI0MzQ5fQ.yv1UhOYwleFZmH3xRu05L4cE4IcZkCdHDEo3AJgLNB4", t1: "SR 遠藤航", t2: "SSR湯母利", t3: "SSR迪奧靴南迪斯", t4: "SSR迪格欄賴斯", t5: "SSR 魔迪", t6: "N/A", bonus: "SSR 魔迪" },
+            { id: 7, name: "森馬", style: "GK 傳統GK", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/n%20Sommer.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9uIFNvbW1lci5wbmciLCJpYXQiOjE3NzAwODgzMjgsImV4cCI6MTgwMTYyNDMyOH0.eWirjWSKznXumms9KgIDwBQhNJ-uTyQEtBdxmPmrnuc", t1: "SSR 馬天尼斯", t2: "SR 馬高卡尼斯治", t3: "SR 恩尼森馬", t4: "N/A", t5: "N/A", t6: "N/A", bonus: "SSR 馬天尼斯" },
+            { id: 8, name: "阿歷辛迪路", style: "CB 搶截者", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Alexsandro%20Ribel.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9BbGV4c2FuZHJvIFJpYmVsLnBuZyIsImlhdCI6MTc3MDA4ODI4NywiZXhwIjoxODAxNjI0Mjg3fQ.hmv-kpyNwEatmuigGsU6sBzPnJIId6kEpfnhTlezlSQ", t1: "SSR湯母利", t2: "SSR 丹尼爾卡華積", t3: "SSR 米奇雲迪分", t4: "SSR 魔迪", t5: "SSR迪格欄賴斯", t6: "N/A", bonus: "SSR湯母利" },
+            { id: 9, name: "加迪", style: "CB 搶截者", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Federico%20Gatti.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9GZWRlcmljbyBHYXR0aS5wbmciLCJpYXQiOjE3NzAwODgzMDksImV4cCI6MTgwMTYyNDMwOX0.i8152YG6If5BuHGSvpLjf95aQ8l54tqb4AsOBYd3zQI", t1: "SSR湯母利", t2: "SSR 丹尼爾卡華積", t3: "SR 衛斯理科芬拿", t4: "SSR迪格欄賴斯", t5: "SR 遠藤航", t6: "N/A", bonus: "SSR湯母利" },
+            { id: 10, name: "拿侯爾摩連拿", style: "RB 攻擊型", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Nahuel%20Molina.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9OYWh1ZWwgTW9saW5hLnBuZyIsImlhdCI6MTc3MDA4ODMzNSwiZXhwIjoxODAxNjI0MzM1fQ.Et-UVQKlEdsmVYB7kOMsV6DIih_tcB-MOgUcLpgDIGo", t1: "SSR迪奧靴南迪斯", t2: "SSR迪格欄賴斯", t3: "SSR 丹尼爾卡華積", t4: "SSR湯母利", t5: "SR 遠藤航", t6: "N/A", bonus: "SSR迪奧靴南迪斯" },
+            { id: 11, name: "長友佑都", style: "LB 攻擊型", image: "https://vgkahmefqqztzmxwcunu.supabase.co/storage/v1/object/sign/football/Yuto%20Nagatomo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zZjlhMzZkZS00ZTJlLTQxOWItOWMzNS0zZjdjY2I4YTNlMWYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJmb290YmFsbC9ZdXRvIE5hZ2F0b21vLnBuZyIsImlhdCI6MTc3MDA4ODM1OSwiZXhwIjoxODAxNjI0MzU5fQ.0NXOiGqRYWBqrDEJbbWIf6-nFCS752mEZYxRWd4S35c", t1: "SSR迪奧靴南迪斯", t2: "SSR迪格欄賴斯", t3: "SSR 丹尼爾卡華積", t4: "SSR湯母利", t5: "SR 遠藤航", t6: "N/A", bonus: "SSR迪奧靴南迪斯" }
+        ];
 
         const PlayerPhoto = ({ src, name, variant = "list" }) => {
             const [error, setError] = useState(false);
@@ -172,15 +112,33 @@
             const cardImg = getTrainingCardImage(name);
             const [imgError, setImgError] = useState(false);
             return (
-                <div className="relative group flex flex-col rounded-3xl overflow-hidden bg-white shadow-lg border border-slate-100 h-full min-h-[180px]">
-                    <div className="absolute top-2 left-2 z-10">
-                        <span className={`px-2 py-0.5 rounded-lg ${color} text-white text-[9px] font-black uppercase shadow-sm`}>{label}</span>
+                <div className="relative group flex flex-col rounded-2xl overflow-hidden bg-white shadow-md border border-slate-100 h-full">
+                    {/* Label - Compact & Floating */}
+                    <div className="absolute top-1 left-1 z-10">
+                        <span className={`px-1.5 py-0.5 rounded-md ${color} text-white text-[8px] font-black uppercase shadow-sm bg-opacity-90 backdrop-blur-sm`}>{label}</span>
                     </div>
-                    <div className="flex-1 w-full bg-slate-50 flex items-center justify-center p-1 overflow-hidden">
-                        {(cardImg && !imgError) ? <img src={cardImg} alt={name} onError={() => setImgError(true)} className="w-full h-full object-contain" /> : <Zap size={32} className="text-slate-200" />}
+                    
+                    {/* Image Container - Aspect Ratio Enforced (3:4) for uniformity */}
+                    <div className="w-full aspect-[3/4] bg-slate-50 relative">
+                        {(cardImg && !imgError) ? (
+                            <img 
+                                src={cardImg} 
+                                alt={name} 
+                                onError={() => setImgError(true)} 
+                                className="w-full h-full object-contain"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                                <Zap size={24} className="text-slate-200" />
+                            </div>
+                        )}
                     </div>
-                    <div className="bg-white p-2 border-t border-slate-50 text-center">
-                        <div className="text-[11px] font-black text-slate-800 leading-tight">{(!name || name === "N/A") ? "無配置" : name}</div>
+                    
+                    {/* Footer Name */}
+                    <div className="bg-white px-1 py-1.5 border-t border-slate-50 text-center flex-1 flex items-center justify-center">
+                        <div className="text-[10px] font-bold text-slate-800 leading-tight line-clamp-2">
+                            {(!name || name === "N/A") ? <span className="text-slate-300">無</span> : name}
+                        </div>
                     </div>
                 </div>
             );
@@ -251,8 +209,8 @@
                                                 <span className="font-black text-xs text-slate-400 tracking-widest uppercase">核心加數值訓練卡</span>
                                             </div>
                                             {getTrainingCardImage(selectedPlayer.bonus) && (
-                                                <div className="w-48 h-48 rounded-3xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 shadow-inner">
-                                                    <img src={getTrainingCardImage(selectedPlayer.bonus)} className="w-full h-full object-contain" />
+                                                <div className="w-56 aspect-[3/4] rounded-3xl bg-white/5 p-2 backdrop-blur-sm border border-white/10 shadow-inner overflow-hidden">
+                                                    <img src={getTrainingCardImage(selectedPlayer.bonus)} className="w-full h-full object-contain drop-shadow-xl" />
                                                 </div>
                                             )}
                                             <p className="text-3xl font-black text-yellow-400 tracking-tight">{selectedPlayer.bonus || '未配置'}</p>
